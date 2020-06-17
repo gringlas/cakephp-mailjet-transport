@@ -16,13 +16,19 @@ At first add the MailJetTransport to your `app.php`
 Also add your credentials to your `app.php`
 ```
 /**
-    * MailJet credentials
-    *
-    */
-'MailJet' => [
-    'key' => '1725f736b9a943848cba0bd8c37986f1',
-    'secret' => '2fc3a99426271018e41a2c28b2c64e99'
-],
+     * MailJet credentials
+     *
+     * - key - MailJet Api key
+     * - 'secret' - MailJet Api secret
+     * - mailJetKeyInTemplateVars - if set to true templateVars from MailJet key will be taken and sent to MailJet,
+     * otherwise send complete templateVars
+     *
+     */
+    'MailJet' => [
+        'key' => '1231sdasd',
+        'secret' => 'asdasd123123',
+        'mailJetKeyInTemplateVars' => false
+    ],
 ```
 
 To log responses from mailJet api please add logger to `app.php`
@@ -57,7 +63,7 @@ If you using `Email` in `app.php` :
 
 
 You can also add the `TemplateID` directly in a Mailer by calling `setProfile()`.
-Provide template vars with `setViewVars()`: 
+If `mailJetKeyInTemplateVars` is set, provode template vars with `setViewVars()` in `MailJet` key, otherwise simply all vars will be sent to MailJet: 
 
 ```
 public function passwordreset() {

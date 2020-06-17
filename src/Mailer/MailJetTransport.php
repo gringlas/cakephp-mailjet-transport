@@ -28,9 +28,15 @@ class MailJetTransport extends AbstractTransport
      */
     private $MailJet;
 
+    protected $_defaultConfig = [
+        'mailJetKeyInTemplateVars' => false
+    ];
 
     public function __construct(array $config)
     {
+        if (Configure::read('MailJet.mailJetKeyInTemplateVars')) {
+            $config['mailJetKeyInTemplateVars'] = Configure::read('MailJet.mailJetKeyInTemplateVars');
+        }
         $this->MailJet = new Client(
             Configure::read('MailJet.key'),
             Configure::read('MailJet.secret'),
@@ -77,8 +83,8 @@ class MailJetTransport extends AbstractTransport
 
     private function buildBody(Email $email)
     {
-        $variables = [];
-        if (isset($email->getViewVars()['MailJet'])) {
+        $variables = $email->getViewVars();
+        if ($this->getConfig('mailJetKeyInTemplateVars') && isset($email->getViewVars()['MailJet'])) {
             $variables = $email->getViewVars()['MailJet'];
         }
         $to = [];
@@ -113,7 +119,7 @@ class MailJetTransport extends AbstractTransport
             $message['Variables'] = $variables;
             $message['TemplateLanguage'] = true;
         }
-        // we are useing a template from MailJet, otherwise use Html and Text templates from cake
+        // we are using a template from MailJet, otherwise use Html and Text templates from cake
         if (isset($email->getProfile()['TemplateID'])) {
             $message['TemplateID'] = $email->getProfile()['TemplateID'];
             $message['TemplateLanguage'] = true;
